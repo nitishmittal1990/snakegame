@@ -17,3 +17,6 @@
 .Snakesmallgrid.food{
   background: #000;
 }
+.Snakesmallgrid.snakepresent{
+  background: red;
+}
