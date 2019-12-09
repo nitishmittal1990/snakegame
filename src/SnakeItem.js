@@ -10,7 +10,7 @@ function SnakeItem(props){
         snakepresent ='snakepresent'
     }
     return(
-        <div className={"Snakesmallgrid " + class1 + snakepresent} id={props.x+'-'+props.y}></div>
+        <div className={"Snakesmallgrid " + class1 + snakepresent} id={props.id} x={props.x} y={props.y}></div>
     )
 }
 
