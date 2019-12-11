@@ -25,7 +25,8 @@ class App extends Component{
     }
     this.generateRandomFood = this.generateRandomFood.bind(this)
     this.formGrid = this.formGrid.bind(this)
-    this.snakeMove = this.snakeMove.bind(this)
+    this.intialsnakeMove = this.intialsnakeMove.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   generateRandomFood(){
@@ -101,17 +102,21 @@ class App extends Component{
     // console.log(this.state.snakegrid);  
   }
   
-  snakeMove(){
+  intialsnakeMove(){
+    var gamestatus;
+    var cursnakegrid;
+    var updatedsnakegrid;
+    console.log(this.state.snakehead, 'currstate')
     if (this.state.snakehead==="right"){
-      var gamestatus = this.state.gameover;
-      var cursnakegrid = [];
+      gamestatus = this.state.gameover;
+      cursnakegrid = [];
       this.state.snakegrid.forEach(function(eachgrid){
         if (eachgrid.isSnakePresent === true) {
           cursnakegrid.push(eachgrid.id+1);
         }
       })
       
-      var updatedsnakegrid = this.state.snakegrid.map(function(eachgrid){
+      updatedsnakegrid = this.state.snakegrid.map(function(eachgrid){
         if(cursnakegrid.includes(eachgrid.id)){
           return ({
             id: eachgrid.id,
@@ -130,17 +135,63 @@ class App extends Component{
           })
         }
       })
-      console.log(cursnakegrid);
+      // console.log(cursnakegrid);
+      // updatedsnakegrid.forEach(function (eachsnake) {
+      //   if (eachsnake.isSnakePresent === true && eachsnake.y > 10) {
+      //     gamestatus = true;
+      //   }
+      // })
     }
-    updatedsnakegrid.forEach(function(eachsnake){
-      if(eachsnake.isSnakePresent===true && eachsnake.y===10){
-        gamestatus = true;
-      }
-    })
+    
+    
     this.setState({
       snakegrid:updatedsnakegrid,
-      gameover: gamestatus
+      // gameover: gamestatus
     })
+  }
+
+  handleKeyPress(event){
+    var movestate;
+    if (event.keyCode === 37) {
+      movestate='left'; 
+    } else if (event.keyCode === 38) {
+      movestate='top'
+    } else if (event.keyCode === 39) {
+      movestate = 'right'
+    } else if (event.keyCode === 40) {
+      movestate='bottom'
+    } else {
+      
+    }
+    console.log(movestate,'keypress');
+    
+    this.setState(function (prevState){
+      if (prevState.snakehead === 'right' || prevState.snakehead==='left') {
+        // console.log(movestate,'coming inside prev left right')
+        if (movestate === 'top' || movestate === 'bottom') {
+          // console.log(movestate,'coming inside')
+          return {
+            snakehead: movestate
+          }
+        } else {
+          return{
+            snakehead: prevState.snakehead
+          }
+        }
+      } else if (prevState.snakehead === 'top' || prevState.snakehead === 'bottom') {
+        if (movestate === 'left' || movestate==='right') {
+          return {
+            snakehead: movestate
+          }
+        } else {
+          return {
+            snakehead: prevState.snakehead
+          }
+        }
+      }
+    })
+    
+    
   }
 
   UNSAFE_componentWillMount(){
@@ -149,7 +200,7 @@ class App extends Component{
   componentDidMount(){
     this.generateRandomFood();
     setInterval(() => {
-      this.snakeMove();
+      this.intialsnakeMove();
     }, 2000);
     
   }
@@ -164,6 +215,11 @@ class App extends Component{
         {this.state.gameover?alert("game over"):null}
         {this.state.gameover?window.location.reload():null}
         {snakegridlist}
+        
+        <div>
+          <input type="text" id="one" onKeyDown={this.handleKeyPress} />
+        </div>
+        
       </div>
     )
   }
