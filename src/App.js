@@ -205,6 +205,10 @@ class App extends Component{
     
   }
 
+  componentDidUpdate(){
+    console.log("hello");
+  }
+
   render(){
     var snakegridlist = this.state.snakegrid.map((eachsnake)=>{
       return <SnakeItem x={eachsnake.x} y={eachsnake.y} isSnake={eachsnake.isSnakePresent} food={eachsnake.isFood} key={eachsnake.x+'-'+eachsnake.y} id={eachsnake.id} />
