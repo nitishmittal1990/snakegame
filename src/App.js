@@ -27,26 +27,15 @@ class App extends Component{
     this.formGrid = this.formGrid.bind(this)
     this.intialsnakeMove = this.intialsnakeMove.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.formGrid()
   }
 
   generateRandomFood(){
-    console.log("hello");
-    var gotfood = true;
-    while (gotfood) {
-      console.log("enter");
-      var foodrow = Math.floor(Math.random() * this.state.rows) + 1;
-      var foodcol = Math.floor(Math.random() * this.state.cols) + 1;
-      gotfood = false;
-      for (var snobj in this.state.snake) {
-        if (this.state.snake[snobj].x === foodrow && this.state.snake[snobj].y === foodcol) {
-          gotfood = true;
-          continue;
-        } 
-      }
-    }
+    var foodrow = Math.floor(Math.random() * this.state.rows) + 1;
+    var foodcol = Math.floor(Math.random() * this.state.cols) + 1;
     
     var updatedsnakegrid = this.state.snakegrid.map((eachsnake)=>{
-      // console.log(foodrow,foodcol);
+      
       if(eachsnake.x===foodrow && eachsnake.y===foodcol){
         return ({
           id:eachsnake.id,
@@ -59,12 +48,10 @@ class App extends Component{
         return eachsnake
       }
     })
-    // console.log(updatedsnakegrid)
+    
     this.setState({
       snakegrid: updatedsnakegrid
     })
-    // prevState.snakegrid[i].key === key
-    
     
   }
   formGrid(){
@@ -190,12 +177,6 @@ class App extends Component{
         }
       }
     })
-    
-    
-  }
-
-  UNSAFE_componentWillMount(){
-    this.formGrid()
   }
   componentDidMount(){
     this.generateRandomFood();
