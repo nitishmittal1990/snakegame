@@ -10,22 +10,16 @@ class App extends Component{
       rows: 10,
       cols: 10,
       snakegrid: [],
-      snake:[
-        {
-          x:5,
-          y:5
-        },
-        {
-          x:5,
-          y:4
-        }
+      snake:[ 
+        {x:4,y:4},
+        {x:4,y:3},
       ],
       snakehead: 'right',
       gameover:false
     }
     this.generateRandomFood = this.generateRandomFood.bind(this)
     this.formGrid = this.formGrid.bind(this)
-    this.intialsnakeMove = this.intialsnakeMove.bind(this)
+    this.snakeMove = this.snakeMove.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.formGrid()
   }
@@ -58,27 +52,27 @@ class App extends Component{
     var createid=1;
     for (var i = 0; i < this.state.rows; i++) {
       for (var j = 0; j < this.state.cols; j++) {
-        if(i===4&& j===4){
+        if(i===4 && j===4){
           this.state.snakegrid.push({
             id: createid,
-            x: i + 1,
-            y: j + 1,
+            x:i,
+            y:j,
             isFood: false,
             isSnakePresent: true
           })
         } else if(i === 4 && j === 3){
             this.state.snakegrid.push({
               id: createid,
-              x: i + 1,
-              y: j + 1,
+              x: i,
+              y: j,
               isFood: false,
               isSnakePresent: true
             })
         } else {
           this.state.snakegrid.push({
             id: createid,
-            x: i + 1,
-            y: j + 1,
+            x: i,
+            y: j,
             isFood: false,
             isSnakePresent: false
           })
@@ -89,50 +83,190 @@ class App extends Component{
     // console.log(this.state.snakegrid);  
   }
   
-  intialsnakeMove(){
-    var gamestatus;
-    var cursnakegrid;
+  snakeMove(){
     var updatedsnakegrid;
-    console.log(this.state.snakehead, 'currstate')
-    if (this.state.snakehead==="right"){
-      gamestatus = this.state.gameover;
-      cursnakegrid = [];
-      this.state.snakegrid.forEach(function(eachgrid){
-        if (eachgrid.isSnakePresent === true) {
-          cursnakegrid.push(eachgrid.id+1);
-        }
-      })
+    if(this.state.snakehead==='right'){
+      let cursnake = this.state.snake;
+      let snakeface = cursnake[0];
+      // console.log('snakeface', snakeface);
+      snakeface = {x:snakeface.x, y:snakeface.y+1};
+      // snakeface.y = snakeface.y + 1;
+      // console.log('snakeface-updated', snakeface);
       
-      updatedsnakegrid = this.state.snakegrid.map(function(eachgrid){
-        if(cursnakegrid.includes(eachgrid.id)){
-          return ({
-            id: eachgrid.id,
-            x: eachgrid.x,
-            y: eachgrid.y,
-            isFood: eachgrid.isFood,
-            isSnakePresent: true
-          })
-        } else {
-          return({
-              id: eachgrid.id,
-              x: eachgrid.x,
-              y: eachgrid.y,
-              isFood: eachgrid.isFood,
-              isSnakePresent: false
-          })
+      // console.log(cursnake);
+      cursnake.unshift(snakeface);
+      cursnake.pop();
+      // console.log(cursnake);
+      updatedsnakegrid = this.state.snakegrid;
+      // console.log(updatedsnakegrid);
+      for(let eachgrid in updatedsnakegrid){
+        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
+        updatedsnakegrid[eachgrid] = {
+          id: updatedsnakegrid[eachgrid].id,
+          x: updatedsnakegrid[eachgrid].x,
+          y: updatedsnakegrid[eachgrid].y,
+          isFood: updatedsnakegrid[eachgrid].isFood,
+          isSnakePresent: false,
         }
-      })
-      // console.log(cursnakegrid);
-      // updatedsnakegrid.forEach(function (eachsnake) {
-      //   if (eachsnake.isSnakePresent === true && eachsnake.y > 10) {
-      //     gamestatus = true;
-      //   }
-      // })
+        for(let eachsnake in cursnake){
+          // console.log(eachsnake,"eachsnakee");
+          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
+            // console.log('entered');
+            // var curgrid = eachgrid;
+            updatedsnakegrid[eachgrid] = {
+              id: updatedsnakegrid[eachgrid].id,
+              x: updatedsnakegrid[eachgrid].x,
+              y: updatedsnakegrid[eachgrid].y,
+              isFood: updatedsnakegrid[eachgrid].isFood,
+              isSnakePresent: true,
+            }
+            break;
+            // console.log('####')
+            // console.log(updatedsnakegrid[eachgrid]);
+          }
+        }
+      }
+      
+    } else if(this.state.snakehead==='top') {
+      let cursnake = this.state.snake;
+      let snakeface = cursnake[0];
+      // console.log('snakeface', snakeface);
+      snakeface = {
+        x: snakeface.x-1,
+        y: snakeface.y
+      };
+      // snakeface.y = snakeface.y + 1;
+      // console.log('snakeface-updated', snakeface);
+
+      // console.log(cursnake);
+      cursnake.unshift(snakeface);
+      cursnake.pop();
+      // console.log(cursnake);
+      updatedsnakegrid = this.state.snakegrid;
+      // console.log(updatedsnakegrid);
+      for (let eachgrid in updatedsnakegrid) {
+        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
+        updatedsnakegrid[eachgrid] = {
+          id: updatedsnakegrid[eachgrid].id,
+          x: updatedsnakegrid[eachgrid].x,
+          y: updatedsnakegrid[eachgrid].y,
+          isFood: updatedsnakegrid[eachgrid].isFood,
+          isSnakePresent: false,
+        }
+        for (let eachsnake in cursnake) {
+          // console.log(eachsnake,"eachsnakee");
+          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
+            // console.log('entered');
+            // var curgrid = eachgrid;
+            updatedsnakegrid[eachgrid] = {
+              id: updatedsnakegrid[eachgrid].id,
+              x: updatedsnakegrid[eachgrid].x,
+              y: updatedsnakegrid[eachgrid].y,
+              isFood: updatedsnakegrid[eachgrid].isFood,
+              isSnakePresent: true,
+            }
+            break;
+            // console.log('####')
+            // console.log(updatedsnakegrid[eachgrid]);
+          }
+        }
+      }
+    } else if(this.state.snakehead==='left') {
+      let cursnake = this.state.snake;
+      let snakeface = cursnake[0];
+      // console.log('snakeface', snakeface);
+      snakeface = {
+        x: snakeface.x,
+        y: snakeface.y-1
+      };
+      // snakeface.y = snakeface.y + 1;
+      // console.log('snakeface-updated', snakeface);
+
+      // console.log(cursnake);
+      cursnake.unshift(snakeface);
+      cursnake.pop();
+      // console.log(cursnake);
+      updatedsnakegrid = this.state.snakegrid;
+      // console.log(updatedsnakegrid);
+      for (let eachgrid in updatedsnakegrid) {
+        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
+        updatedsnakegrid[eachgrid] = {
+          id: updatedsnakegrid[eachgrid].id,
+          x: updatedsnakegrid[eachgrid].x,
+          y: updatedsnakegrid[eachgrid].y,
+          isFood: updatedsnakegrid[eachgrid].isFood,
+          isSnakePresent: false,
+        }
+        for (let eachsnake in cursnake) {
+          // console.log(eachsnake,"eachsnakee");
+          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
+            // console.log('entered');
+            // var curgrid = eachgrid;
+            updatedsnakegrid[eachgrid] = {
+              id: updatedsnakegrid[eachgrid].id,
+              x: updatedsnakegrid[eachgrid].x,
+              y: updatedsnakegrid[eachgrid].y,
+              isFood: updatedsnakegrid[eachgrid].isFood,
+              isSnakePresent: true,
+            }
+            break;
+            // console.log('####')
+            // console.log(updatedsnakegrid[eachgrid]);
+          }
+        }
+      }
+    } else if(this.state.snakehead==='bottom'){
+      let cursnake = this.state.snake;
+      let snakeface = cursnake[0];
+      // console.log('snakeface', snakeface);
+      snakeface = {
+        x: snakeface.x+1,
+        y: snakeface.y,
+      };
+      // snakeface.y = snakeface.y + 1;
+      // console.log('snakeface-updated', snakeface);
+
+      // console.log(cursnake);
+      cursnake.unshift(snakeface);
+      cursnake.pop();
+      // console.log(cursnake);
+      updatedsnakegrid = this.state.snakegrid;
+      // console.log(updatedsnakegrid);
+      for (let eachgrid in updatedsnakegrid) {
+        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
+        updatedsnakegrid[eachgrid] = {
+          id: updatedsnakegrid[eachgrid].id,
+          x: updatedsnakegrid[eachgrid].x,
+          y: updatedsnakegrid[eachgrid].y,
+          isFood: updatedsnakegrid[eachgrid].isFood,
+          isSnakePresent: false,
+        }
+        for (let eachsnake in cursnake) {
+          // console.log(eachsnake,"eachsnakee");
+          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
+            // console.log('entered');
+            // var curgrid = eachgrid;
+            updatedsnakegrid[eachgrid] = {
+              id: updatedsnakegrid[eachgrid].id,
+              x: updatedsnakegrid[eachgrid].x,
+              y: updatedsnakegrid[eachgrid].y,
+              isFood: updatedsnakegrid[eachgrid].isFood,
+              isSnakePresent: true,
+            }
+            break;
+            // console.log('####')
+            // console.log(updatedsnakegrid[eachgrid]);
+          }
+        }
+      }
+    } else{
+
     }
     
     
+    
     this.setState({
-      snakegrid:updatedsnakegrid,
+      snakegrid: updatedsnakegrid,
       // gameover: gamestatus
     })
   }
@@ -177,17 +311,19 @@ class App extends Component{
         }
       }
     })
+    console.log(this.state.snakehead);
   }
   componentDidMount(){
     this.generateRandomFood();
     setInterval(() => {
-      this.intialsnakeMove();
-    }, 2000);
+      this.snakeMove();
+    }, 400);
     
   }
 
   componentDidUpdate(){
-    console.log("hello");
+    // console.log("hello");
+    // this.snakeMove();
   }
 
   render(){
