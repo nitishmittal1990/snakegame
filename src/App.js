@@ -27,7 +27,7 @@ class App extends Component{
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.isEatFood = this.isEatFood.bind(this)
     this.formGrid()
-    this.baseState = this.state
+    this.gridUpdate = this.gridUpdate.bind(this)
   }
 
   generateRandomFood(){
@@ -103,7 +103,40 @@ class App extends Component{
     }
   }
 
-  
+  gridUpdate(cursnake){
+    // console.log(cursnake);
+    let updatedsnakegrid = this.state.snakegrid;
+    // console.log(updatedsnakegrid);
+    for(let eachgrid in updatedsnakegrid){
+      // console.log(updatedsnakegrid[eachgrid], "eachgrid");
+      updatedsnakegrid[eachgrid] = {
+        id: updatedsnakegrid[eachgrid].id,
+        x: updatedsnakegrid[eachgrid].x,
+        y: updatedsnakegrid[eachgrid].y,
+        isFood: updatedsnakegrid[eachgrid].isFood,
+        isSnakePresent: false,
+      }
+      for(let eachsnake in cursnake){
+        
+        // console.log(eachsnake,"eachsnakee");
+        if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
+          // console.log('entered');
+          // var curgrid = eachgrid;
+          updatedsnakegrid[eachgrid] = {
+            id: updatedsnakegrid[eachgrid].id,
+            x: updatedsnakegrid[eachgrid].x,
+            y: updatedsnakegrid[eachgrid].y,
+            isFood: updatedsnakegrid[eachgrid].isFood,
+            isSnakePresent: true,
+          }
+          break;
+          // console.log('####')
+          // console.log(updatedsnakegrid[eachgrid]);
+        }
+      }
+    }
+    return updatedsnakegrid;
+  }
   snakeMove(){
     var updatedsnakegrid;
     var gamestatus=this.state.gameover;
@@ -131,39 +164,9 @@ class App extends Component{
       // console.log('snakeface-updated', snakeface);
       
       // console.log(cursnake);
+      updatedsnakegrid = this.gridUpdate(cursnake);
       
       
-      // console.log(cursnake);
-      updatedsnakegrid = this.state.snakegrid;
-      // console.log(updatedsnakegrid);
-      for(let eachgrid in updatedsnakegrid){
-        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
-        updatedsnakegrid[eachgrid] = {
-          id: updatedsnakegrid[eachgrid].id,
-          x: updatedsnakegrid[eachgrid].x,
-          y: updatedsnakegrid[eachgrid].y,
-          isFood: updatedsnakegrid[eachgrid].isFood,
-          isSnakePresent: false,
-        }
-        for(let eachsnake in cursnake){
-          
-          // console.log(eachsnake,"eachsnakee");
-          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
-            // console.log('entered');
-            // var curgrid = eachgrid;
-            updatedsnakegrid[eachgrid] = {
-              id: updatedsnakegrid[eachgrid].id,
-              x: updatedsnakegrid[eachgrid].x,
-              y: updatedsnakegrid[eachgrid].y,
-              isFood: updatedsnakegrid[eachgrid].isFood,
-              isSnakePresent: true,
-            }
-            break;
-            // console.log('####')
-            // console.log(updatedsnakegrid[eachgrid]);
-          }
-        }
-      }
       
     } else if(this.state.snakehead==='top') {
       let cursnake = this.state.snake;
@@ -189,38 +192,9 @@ class App extends Component{
       }
       // console.log('snakeface-updated', snakeface);
 
-      // console.log(cursnake);
+      updatedsnakegrid = this.gridUpdate(cursnake);
 
-      // console.log(cursnake);
-      updatedsnakegrid = this.state.snakegrid;
-      // console.log(updatedsnakegrid);
-      for (let eachgrid in updatedsnakegrid) {
-        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
-        updatedsnakegrid[eachgrid] = {
-          id: updatedsnakegrid[eachgrid].id,
-          x: updatedsnakegrid[eachgrid].x,
-          y: updatedsnakegrid[eachgrid].y,
-          isFood: updatedsnakegrid[eachgrid].isFood,
-          isSnakePresent: false,
-        }
-        for (let eachsnake in cursnake) {
-          // console.log(eachsnake,"eachsnakee");
-          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
-            // console.log('entered');
-            // var curgrid = eachgrid;
-            updatedsnakegrid[eachgrid] = {
-              id: updatedsnakegrid[eachgrid].id,
-              x: updatedsnakegrid[eachgrid].x,
-              y: updatedsnakegrid[eachgrid].y,
-              isFood: updatedsnakegrid[eachgrid].isFood,
-              isSnakePresent: true,
-            }
-            break;
-            // console.log('####')
-            // console.log(updatedsnakegrid[eachgrid]);
-          }
-        }
-      }
+      
     } else if(this.state.snakehead==='left') {
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
@@ -245,38 +219,8 @@ class App extends Component{
       }
       // console.log('snakeface-updated', snakeface);
 
-      // console.log(cursnake);
+      updatedsnakegrid = this.gridUpdate(cursnake);
       
-      // console.log(cursnake);
-      updatedsnakegrid = this.state.snakegrid;
-      // console.log(updatedsnakegrid);
-      for (let eachgrid in updatedsnakegrid) {
-        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
-        updatedsnakegrid[eachgrid] = {
-          id: updatedsnakegrid[eachgrid].id,
-          x: updatedsnakegrid[eachgrid].x,
-          y: updatedsnakegrid[eachgrid].y,
-          isFood: updatedsnakegrid[eachgrid].isFood,
-          isSnakePresent: false,
-        }
-        for (let eachsnake in cursnake) {
-          // console.log(eachsnake,"eachsnakee");
-          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
-            // console.log('entered');
-            // var curgrid = eachgrid;
-            updatedsnakegrid[eachgrid] = {
-              id: updatedsnakegrid[eachgrid].id,
-              x: updatedsnakegrid[eachgrid].x,
-              y: updatedsnakegrid[eachgrid].y,
-              isFood: updatedsnakegrid[eachgrid].isFood,
-              isSnakePresent: true,
-            }
-            break;
-            // console.log('####')
-            // console.log(updatedsnakegrid[eachgrid]);
-          }
-        }
-      }
     } else if(this.state.snakehead==='bottom'){
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
@@ -301,38 +245,9 @@ class App extends Component{
       }
       // console.log('snakeface-updated', snakeface);
 
-      // console.log(cursnake);
+      updatedsnakegrid = this.gridUpdate(cursnake);
       
-      // console.log(cursnake);
-      updatedsnakegrid = this.state.snakegrid;
-      // console.log(updatedsnakegrid);
-      for (let eachgrid in updatedsnakegrid) {
-        // console.log(updatedsnakegrid[eachgrid], "eachgrid");
-        updatedsnakegrid[eachgrid] = {
-          id: updatedsnakegrid[eachgrid].id,
-          x: updatedsnakegrid[eachgrid].x,
-          y: updatedsnakegrid[eachgrid].y,
-          isFood: updatedsnakegrid[eachgrid].isFood,
-          isSnakePresent: false,
-        }
-        for (let eachsnake in cursnake) {
-          // console.log(eachsnake,"eachsnakee");
-          if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
-            // console.log('entered');
-            // var curgrid = eachgrid;
-            updatedsnakegrid[eachgrid] = {
-              id: updatedsnakegrid[eachgrid].id,
-              x: updatedsnakegrid[eachgrid].x,
-              y: updatedsnakegrid[eachgrid].y,
-              isFood: updatedsnakegrid[eachgrid].isFood,
-              isSnakePresent: true,
-            }
-            break;
-            // console.log('####')
-            // console.log(updatedsnakegrid[eachgrid]);
-          }
-        }
-      }
+      
     } else{
 
     }
@@ -399,12 +314,7 @@ class App extends Component{
     
   }
 
-  componentDidUpdate(prevState){
-    // console.log("hello");
-    // this.snakeMove();
-    
-    
-  }
+  
   resetGame(){
     window.location.reload();
   }
