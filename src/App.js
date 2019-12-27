@@ -15,18 +15,20 @@ class App extends Component{
         {x:4,y:3},
       ],
       snakehead: 'right',
-      gameover:false
+      gameover:false,
+      food:{}
     }
     this.generateRandomFood = this.generateRandomFood.bind(this)
     this.formGrid = this.formGrid.bind(this)
     this.snakeMove = this.snakeMove.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.isEatFood = this.isEatFood.bind(this)
     this.formGrid()
   }
 
   generateRandomFood(){
-    var foodrow = Math.floor(Math.random() * this.state.rows) + 1;
-    var foodcol = Math.floor(Math.random() * this.state.cols) + 1;
+    var foodrow = Math.floor(Math.random() * this.state.rows);
+    var foodcol = Math.floor(Math.random() * this.state.cols);
     
     var updatedsnakegrid = this.state.snakegrid.map((eachsnake)=>{
       
@@ -39,12 +41,19 @@ class App extends Component{
           isSnakePresent:false
         })
       } else {
-        return eachsnake
+        return ({
+          id:eachsnake.id,
+          x:eachsnake.x,
+          y:eachsnake.y,
+          isFood:false,
+          isSnakePresent: eachsnake.isSnakePresent
+        })
       }
     })
     
     this.setState({
-      snakegrid: updatedsnakegrid
+      snakegrid: updatedsnakegrid,
+      food: {x:foodrow,y:foodcol}
     })
     
   }
@@ -83,19 +92,39 @@ class App extends Component{
     // console.log(this.state.snakegrid);  
   }
   
+  isEatFood(snakeface) {
+    if (snakeface.x === this.state.food.x && snakeface.y === this.state.food.y) {
+      this.generateRandomFood();
+      return true;
+    }
+  }
+
+  idBodyContact(){
+    
+  }
   snakeMove(){
     var updatedsnakegrid;
+    var gamestatus=this.state.gameover;
     if(this.state.snakehead==='right'){
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
       // console.log('snakeface', snakeface);
       snakeface = {x:snakeface.x, y:snakeface.y+1};
-      // snakeface.y = snakeface.y + 1;
+      if (snakeface.y>9){
+        gamestatus = true;
+      }
+      if(this.isEatFood(snakeface)){
+        cursnake.unshift(snakeface);
+      } else {
+        cursnake.unshift(snakeface);
+        cursnake.pop();
+      }
+
       // console.log('snakeface-updated', snakeface);
       
       // console.log(cursnake);
-      cursnake.unshift(snakeface);
-      cursnake.pop();
+      
+      
       // console.log(cursnake);
       updatedsnakegrid = this.state.snakegrid;
       // console.log(updatedsnakegrid);
@@ -135,12 +164,19 @@ class App extends Component{
         x: snakeface.x-1,
         y: snakeface.y
       };
-      // snakeface.y = snakeface.y + 1;
+      if (snakeface.x < 0) {
+        gamestatus = true;
+      }
+      if (this.isEatFood(snakeface)) {
+        cursnake.unshift(snakeface);
+      } else {
+        cursnake.unshift(snakeface);
+        cursnake.pop();
+      }
       // console.log('snakeface-updated', snakeface);
 
       // console.log(cursnake);
-      cursnake.unshift(snakeface);
-      cursnake.pop();
+
       // console.log(cursnake);
       updatedsnakegrid = this.state.snakegrid;
       // console.log(updatedsnakegrid);
@@ -179,12 +215,20 @@ class App extends Component{
         x: snakeface.x,
         y: snakeface.y-1
       };
-      // snakeface.y = snakeface.y + 1;
+      if (snakeface.y < 0) {
+        gamestatus = true;
+      }
+      if (this.isEatFood(snakeface)) {
+        cursnake.unshift(snakeface);
+      } else {
+        cursnake.unshift(snakeface);
+        cursnake.pop();
+      }
+      
       // console.log('snakeface-updated', snakeface);
 
       // console.log(cursnake);
-      cursnake.unshift(snakeface);
-      cursnake.pop();
+      
       // console.log(cursnake);
       updatedsnakegrid = this.state.snakegrid;
       // console.log(updatedsnakegrid);
@@ -223,12 +267,20 @@ class App extends Component{
         x: snakeface.x+1,
         y: snakeface.y,
       };
-      // snakeface.y = snakeface.y + 1;
+      if (snakeface.x > 9) {
+        gamestatus = true;
+      }
+      if (this.isEatFood(snakeface)) {
+        cursnake.unshift(snakeface);
+      } else {
+        cursnake.unshift(snakeface);
+        cursnake.pop();
+      }
+      
       // console.log('snakeface-updated', snakeface);
 
       // console.log(cursnake);
-      cursnake.unshift(snakeface);
-      cursnake.pop();
+      
       // console.log(cursnake);
       updatedsnakegrid = this.state.snakegrid;
       // console.log(updatedsnakegrid);
@@ -267,7 +319,7 @@ class App extends Component{
     
     this.setState({
       snakegrid: updatedsnakegrid,
-      // gameover: gamestatus
+      gameover: gamestatus
     })
   }
 
@@ -313,6 +365,10 @@ class App extends Component{
     })
     console.log(this.state.snakehead);
   }
+
+  
+  
+
   componentDidMount(){
     this.generateRandomFood();
     setInterval(() => {
@@ -321,10 +377,16 @@ class App extends Component{
     
   }
 
-  componentDidUpdate(){
+  componentDidUpdate(prevState){
     // console.log("hello");
     // this.snakeMove();
+    if (this.state.gameover !== prevState.gameover) {
+      // this.snakeTouchBoundary();
+    }
+    
   }
+
+  
 
   render(){
     var snakegridlist = this.state.snakegrid.map((eachsnake)=>{
@@ -338,7 +400,7 @@ class App extends Component{
         {snakegridlist}
         
         <div>
-          <input type="text" id="one" onKeyDown={this.handleKeyPress} />
+          <input type="text" id="one" onKeyDown={this.handleKeyPress} autoFocus />
         </div>
         
       </div>
