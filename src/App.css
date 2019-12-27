@@ -17,10 +17,23 @@
 .Snakesmallgrid.food{
   background: #000;
 }
-.Snakesmallgrid.snakepresent{
+.Snakesmallgrid.snakepresent,.Snakesmallgrid.snakepresent.food{
   background: red;
 }
 
 #one {
   
+}
+
+#overlay {
+  position: fixed;
+    display: block;
+    background: #000;
+    top: 0;
+    lefT: 0;
+    width: 100vw;
+    height: 100vh;
+    color: #fff;
+    font-size: 28px;
+    text-align: center;
 }

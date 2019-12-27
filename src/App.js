@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import './App.css';
 import SnakeItem from './SnakeItem';
+import GameOverChild from './GameOverChild';
 
 class App extends Component{
 
@@ -16,14 +17,17 @@ class App extends Component{
       ],
       snakehead: 'right',
       gameover:false,
-      food:{}
+      food:{},
+      inputDisable: false
     }
+    this.resetGame=this.resetGame.bind(this)
     this.generateRandomFood = this.generateRandomFood.bind(this)
     this.formGrid = this.formGrid.bind(this)
     this.snakeMove = this.snakeMove.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.isEatFood = this.isEatFood.bind(this)
     this.formGrid()
+    this.baseState = this.state
   }
 
   generateRandomFood(){
@@ -99,9 +103,7 @@ class App extends Component{
     }
   }
 
-  idBodyContact(){
-    
-  }
+  
   snakeMove(){
     var updatedsnakegrid;
     var gamestatus=this.state.gameover;
@@ -118,6 +120,12 @@ class App extends Component{
       } else {
         cursnake.unshift(snakeface);
         cursnake.pop();
+      }
+      
+      for (let y=1;y<cursnake.length;y++) {
+        if (snakeface.x === cursnake[y].x && snakeface.y === cursnake[y].y) {
+          gamestatus = true;
+        }
       }
 
       // console.log('snakeface-updated', snakeface);
@@ -138,6 +146,7 @@ class App extends Component{
           isSnakePresent: false,
         }
         for(let eachsnake in cursnake){
+          
           // console.log(eachsnake,"eachsnakee");
           if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
             // console.log('entered');
@@ -172,6 +181,11 @@ class App extends Component{
       } else {
         cursnake.unshift(snakeface);
         cursnake.pop();
+      }
+      for (let y=1;y<cursnake.length;y++) {
+        if (snakeface.x === cursnake[y].x && snakeface.y === cursnake[y].y) {
+          gamestatus = true;
+        }
       }
       // console.log('snakeface-updated', snakeface);
 
@@ -224,7 +238,11 @@ class App extends Component{
         cursnake.unshift(snakeface);
         cursnake.pop();
       }
-      
+      for (let y=1;y<cursnake.length;y++) {
+        if (snakeface.x === cursnake[y].x && snakeface.y === cursnake[y].y) {
+          gamestatus = true;
+        }
+      }
       // console.log('snakeface-updated', snakeface);
 
       // console.log(cursnake);
@@ -276,7 +294,11 @@ class App extends Component{
         cursnake.unshift(snakeface);
         cursnake.pop();
       }
-      
+      for (let y=1;y<cursnake.length;y++) {
+        if (snakeface.x === cursnake[y].x && snakeface.y === cursnake[y].y) {
+          gamestatus = true;
+        }
+      }
       // console.log('snakeface-updated', snakeface);
 
       // console.log(cursnake);
@@ -380,12 +402,12 @@ class App extends Component{
   componentDidUpdate(prevState){
     // console.log("hello");
     // this.snakeMove();
-    if (this.state.gameover !== prevState.gameover) {
-      // this.snakeTouchBoundary();
-    }
+    
     
   }
-
+  resetGame(){
+    window.location.reload();
+  }
   
 
   render(){
@@ -395,8 +417,8 @@ class App extends Component{
     
     return (
       <div className = "SnakeApp">
-        {this.state.gameover?alert("game over"):null}
-        {this.state.gameover?window.location.reload():null}
+        {this.state.gameover?(<GameOverChild onClicked={this.resetGame} />):null}
+        
         {snakegridlist}
         
         <div>
