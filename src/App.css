@@ -34,6 +34,7 @@ h1 {
 }
 
 
+
 #overlay {
   position: fixed;
     display: block;
@@ -48,7 +49,8 @@ h1 {
     padding-top: 20vh;
 }
 
-#playBtn {
+#playBtn,
+#gStart {
   padding: 12px 20px;
   background-color: aqua;
   color: #353535;
@@ -58,7 +60,8 @@ h1 {
   font-size: 18px;
   border: none;
 }
-#playBtn:hover {
+#playBtn:hover,
+#gStart:hover {
   cursor: pointer;
   background-color: aquamarine;
 }

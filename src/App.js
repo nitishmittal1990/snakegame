@@ -17,6 +17,7 @@ class App extends Component{
       ],
       snakehead: 'right',
       gameover:false,
+      gamestart: false,
       food:{},
       inputDisable: false,
       score: 0
@@ -27,6 +28,7 @@ class App extends Component{
     this.snakeMove = this.snakeMove.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.isEatFood = this.isEatFood.bind(this)
+    this.handleGameStart = this.handleGameStart.bind(this)
     this.formGrid()
     this.gridUpdate = this.gridUpdate.bind(this)
   }
@@ -303,13 +305,20 @@ class App extends Component{
   }
 
   
-  
-
-  componentDidMount(){
-    this.generateRandomFood();
+  handleGameStart(){
+    this.setState({
+      gamestart: true
+    })
     setInterval(() => {
       this.snakeMove();
     }, 400);
+  }
+
+  componentDidMount(){
+    this.generateRandomFood();
+    if(this.state.gamestart) {
+      
+    }
     document.addEventListener("keydown", this.handleKeyPress);
   }
 
@@ -320,14 +329,20 @@ class App extends Component{
   
 
   render(){
-    var snakegridlist = this.state.snakegrid.map((eachsnake)=>{
-      return <SnakeItem x={eachsnake.x} y={eachsnake.y} isSnake={eachsnake.isSnakePresent} food={eachsnake.isFood} key={eachsnake.x+'-'+eachsnake.y} id={eachsnake.id} />
-    })
+    if(this.state.gamestart){
+      var snakegridlist = this.state.snakegrid.map((eachsnake)=>{
+        return <SnakeItem x={eachsnake.x} y={eachsnake.y} isSnake={eachsnake.isSnakePresent} food={eachsnake.isFood} key={eachsnake.x+'-'+eachsnake.y} id={eachsnake.id} />
+      })
+    } else {
+      var startBtn = <button onClick={this.handleGameStart} id="gStart">Start Game</button>;
+    }
+    
     
     return (
       <div className="snakegame">
         <h1> Snake World </h1>
         <p className="scoredisplay">Your Score: {this.state.score} </p>
+        {startBtn}
         <div className = "SnakeApp">
           {this.state.gameover?(<GameOverChild onClicked={this.resetGame} score={this.state.score} />):null}
           
