@@ -1,3 +1,14 @@
+h1 {
+  font-size: 22px;
+  margin: 0;
+  margin-top: 12px;
+}
+.snakegame {
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+}
+
 .SnakeApp {
   width:500px;
   height: 500px;  
@@ -8,22 +19,20 @@
 
 .Snakesmallgrid{
   width: 50px;
-  height: 50px;
-  outline: 1px solid #000;
+  height: 50px; 
   display: inline-block;
   margin:0;
 
 }
 .Snakesmallgrid.food{
-  background: #000;
+  background: chartreuse;
+  border-radius: 25px;
 }
-.Snakesmallgrid.snakepresent,.Snakesmallgrid.snakepresent.food{
-  background: red;
+.Snakesmallgrid.snakepresent{
+  background: navy;
+  border-radius: 18px;
 }
 
-#one {
-  
-}
 
 #overlay {
   position: fixed;
@@ -36,4 +45,30 @@
     color: #fff;
     font-size: 28px;
     text-align: center;
+    padding-top: 20vh;
+}
+
+#playBtn {
+  padding: 12px 20px;
+  background-color: aqua;
+  color: #353535;
+  outline: none;
+  display: block;
+  margin: 12px auto;
+  font-size: 18px;
+  border: none;
+}
+#playBtn:hover {
+  cursor: pointer;
+  background-color: aquamarine;
+}
+.scoredisplay {
+  position: absolute;
+  font-size: 18px;
+  color: #000;
+  display: inline-block;
+  border: 1px solid red;
+  padding: 8px 16px;
+  right: 0;
+  top: -18px;
 }

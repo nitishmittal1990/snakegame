@@ -9,6 +9,9 @@ function SnakeItem(props){
     if (props.isSnake) {
         snakepresent ='snakepresent'
     }
+    if (props.isSnake && props.food) {
+        class1 = ''
+    }
     return(
         <div className={"Snakesmallgrid " + class1 + snakepresent} id={props.id} x={props.x} y={props.y}></div>
     )

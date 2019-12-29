@@ -18,7 +18,8 @@ class App extends Component{
       snakehead: 'right',
       gameover:false,
       food:{},
-      inputDisable: false
+      inputDisable: false,
+      score: 0
     }
     this.resetGame=this.resetGame.bind(this)
     this.generateRandomFood = this.generateRandomFood.bind(this)
@@ -61,6 +62,7 @@ class App extends Component{
     })
     
   }
+
   formGrid(){
     var createid=1;
     for (var i = 0; i < this.state.rows; i++) {
@@ -93,7 +95,7 @@ class App extends Component{
         createid++;
       }
     }
-    // console.log(this.state.snakegrid);  
+
   }
   
   isEatFood(snakeface) {
@@ -103,12 +105,14 @@ class App extends Component{
     }
   }
 
+  /* 
+    Function Use: Updating Grid On Snake Move 
+  */
   gridUpdate(cursnake){
-    // console.log(cursnake);
+
     let updatedsnakegrid = this.state.snakegrid;
-    // console.log(updatedsnakegrid);
     for(let eachgrid in updatedsnakegrid){
-      // console.log(updatedsnakegrid[eachgrid], "eachgrid");
+
       updatedsnakegrid[eachgrid] = {
         id: updatedsnakegrid[eachgrid].id,
         x: updatedsnakegrid[eachgrid].x,
@@ -117,11 +121,7 @@ class App extends Component{
         isSnakePresent: false,
       }
       for(let eachsnake in cursnake){
-        
-        // console.log(eachsnake,"eachsnakee");
         if (updatedsnakegrid[eachgrid].x === cursnake[eachsnake].x && updatedsnakegrid[eachgrid].y === cursnake[eachsnake].y) {
-          // console.log('entered');
-          // var curgrid = eachgrid;
           updatedsnakegrid[eachgrid] = {
             id: updatedsnakegrid[eachgrid].id,
             x: updatedsnakegrid[eachgrid].x,
@@ -130,26 +130,29 @@ class App extends Component{
             isSnakePresent: true,
           }
           break;
-          // console.log('####')
-          // console.log(updatedsnakegrid[eachgrid]);
         }
       }
     }
     return updatedsnakegrid;
   }
+
+  /* 
+    Function Use: Snake Move Login with Snake Direction
+  */
   snakeMove(){
+    var curScore = this.state.score;
     var updatedsnakegrid;
     var gamestatus=this.state.gameover;
     if(this.state.snakehead==='right'){
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
-      // console.log('snakeface', snakeface);
       snakeface = {x:snakeface.x, y:snakeface.y+1};
       if (snakeface.y>9){
         gamestatus = true;
       }
       if(this.isEatFood(snakeface)){
         cursnake.unshift(snakeface);
+        curScore = curScore + 10;
       } else {
         cursnake.unshift(snakeface);
         cursnake.pop();
@@ -161,9 +164,6 @@ class App extends Component{
         }
       }
 
-      // console.log('snakeface-updated', snakeface);
-      
-      // console.log(cursnake);
       updatedsnakegrid = this.gridUpdate(cursnake);
       
       
@@ -171,7 +171,6 @@ class App extends Component{
     } else if(this.state.snakehead==='top') {
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
-      // console.log('snakeface', snakeface);
       snakeface = {
         x: snakeface.x-1,
         y: snakeface.y
@@ -181,6 +180,7 @@ class App extends Component{
       }
       if (this.isEatFood(snakeface)) {
         cursnake.unshift(snakeface);
+        curScore = curScore + 10;
       } else {
         cursnake.unshift(snakeface);
         cursnake.pop();
@@ -190,7 +190,6 @@ class App extends Component{
           gamestatus = true;
         }
       }
-      // console.log('snakeface-updated', snakeface);
 
       updatedsnakegrid = this.gridUpdate(cursnake);
 
@@ -198,7 +197,6 @@ class App extends Component{
     } else if(this.state.snakehead==='left') {
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
-      // console.log('snakeface', snakeface);
       snakeface = {
         x: snakeface.x,
         y: snakeface.y-1
@@ -208,6 +206,7 @@ class App extends Component{
       }
       if (this.isEatFood(snakeface)) {
         cursnake.unshift(snakeface);
+        curScore = curScore + 10;
       } else {
         cursnake.unshift(snakeface);
         cursnake.pop();
@@ -217,14 +216,14 @@ class App extends Component{
           gamestatus = true;
         }
       }
-      // console.log('snakeface-updated', snakeface);
+
 
       updatedsnakegrid = this.gridUpdate(cursnake);
       
     } else if(this.state.snakehead==='bottom'){
       let cursnake = this.state.snake;
       let snakeface = cursnake[0];
-      // console.log('snakeface', snakeface);
+
       snakeface = {
         x: snakeface.x+1,
         y: snakeface.y,
@@ -234,6 +233,7 @@ class App extends Component{
       }
       if (this.isEatFood(snakeface)) {
         cursnake.unshift(snakeface);
+        curScore = curScore + 10;
       } else {
         cursnake.unshift(snakeface);
         cursnake.pop();
@@ -243,7 +243,7 @@ class App extends Component{
           gamestatus = true;
         }
       }
-      // console.log('snakeface-updated', snakeface);
+
 
       updatedsnakegrid = this.gridUpdate(cursnake);
       
@@ -251,12 +251,12 @@ class App extends Component{
     } else{
 
     }
-    
-    
+
     
     this.setState({
       snakegrid: updatedsnakegrid,
-      gameover: gamestatus
+      gameover: gamestatus,
+      score: curScore
     })
   }
 
@@ -273,13 +273,12 @@ class App extends Component{
     } else {
       
     }
-    console.log(movestate,'keypress');
-    
+
     this.setState(function (prevState){
       if (prevState.snakehead === 'right' || prevState.snakehead==='left') {
-        // console.log(movestate,'coming inside prev left right')
+
         if (movestate === 'top' || movestate === 'bottom') {
-          // console.log(movestate,'coming inside')
+
           return {
             snakehead: movestate
           }
@@ -300,7 +299,7 @@ class App extends Component{
         }
       }
     })
-    console.log(this.state.snakehead);
+
   }
 
   
@@ -311,7 +310,7 @@ class App extends Component{
     setInterval(() => {
       this.snakeMove();
     }, 400);
-    
+    document.addEventListener("keydown", this.handleKeyPress);
   }
 
   
@@ -326,15 +325,14 @@ class App extends Component{
     })
     
     return (
-      <div className = "SnakeApp">
-        {this.state.gameover?(<GameOverChild onClicked={this.resetGame} />):null}
-        
-        {snakegridlist}
-        
-        <div>
-          <input type="text" id="one" onKeyDown={this.handleKeyPress} autoFocus />
+      <div className="snakegame">
+        <h1> Snake World </h1>
+        <p className="scoredisplay">Your Score: {this.state.score} </p>
+        <div className = "SnakeApp">
+          {this.state.gameover?(<GameOverChild onClicked={this.resetGame} score={this.state.score} />):null}
+          
+          {snakegridlist}
         </div>
-        
       </div>
     )
   }
